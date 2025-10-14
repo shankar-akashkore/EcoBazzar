@@ -49,4 +49,5 @@ public class ProductService {
 	public List<Product> getEcoCertifiedSortedByCarbonImpact() {
 		return productRepository.findByEcoCertifiedTrueOrderByCarbonImpactAsc();
 	}
+	
 }
