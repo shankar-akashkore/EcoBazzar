@@ -81,7 +81,7 @@ public class Product {
 		this.carbonImpact = carbonImpact;
 	}
 
-	public boolean getEcoCertified() {
+	public Boolean getEcoCertified() {
 		return ecoCertified;
 	}
 

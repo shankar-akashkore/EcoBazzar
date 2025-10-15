@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ecobazzar.eco.bazzar.dto.CartSummaryDto;
 import com.ecobazzar.eco.bazzar.model.CartItem;
 import com.ecobazzar.eco.bazzar.service.CartService;
 
@@ -29,8 +30,8 @@ public class CartController {
 	}
 	
 	@GetMapping("/{userId}")
-	public List<CartItem> getCart(@PathVariable Long userId){
-		return cartService.getCartByUserId(userId);
+	public CartSummaryDto getCartSummary(@PathVariable Long userId) {
+		return cartService.getCartSummary(userId);
 	}
 	
 	@DeleteMapping("/{id}")
