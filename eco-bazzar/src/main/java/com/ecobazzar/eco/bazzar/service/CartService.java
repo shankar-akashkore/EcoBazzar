@@ -41,28 +41,27 @@ public class CartService {
 	        totalPrice += product.getPrice() * item.getQuantity();
 	        totalCarbon += product.getCarbonImpact() * item.getQuantity();
 
-	        if (Boolean.FALSE.equals(product.getEcoCertified())) {
-	        	String[] words = product.getName().split("");
-	        	String keyword = words[words.length - 1].replaceAll("[^a-zA-Z]","");
 	        	
+	        	if (Boolean.FALSE.equals(product.getEcoCertified())) {
+	        		String[] words = product.getName().split(" ");
+	        		String keyword = words[words.length - 1].replaceAll("[^a-zA-Z]", "");
 	        	
-	            Optional<Product> ecoAlt = productRepository
+	        	Optional<Product> ecoAlt = productRepository
 	                    .findFirstByEcoCertifiedTrueAndNameContainingIgnoreCase(keyword);
-
+	        	
 	            if (ecoAlt.isPresent()) {
 	                double saved = product.getCarbonImpact() - ecoAlt.get().getCarbonImpact();
 
 	                if (saved > 0.5) {
 	                    ecoSuggestion = "💡 Switch to " + ecoAlt.get().getName()
-	                            + " and save " + saved + " kg CO₂!";
+	                            + " and save " + String.format("%.2f", saved) + " kg CO₂!";
 	                }
 	            }
 	        }
 	    }
 
 	    return new CartSummaryDto(cartItems, totalPrice, totalCarbon, ecoSuggestion);
-	}
-
+	   }
 	
 	public void removeFromCart(Long id) {
 		cartRepository.deleteById(id);
