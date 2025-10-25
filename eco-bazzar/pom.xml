@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ecobazzar</groupId>
-	<artifactId>eco-bazzar</artifactId>
+	<artifactId>ecobazzar</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>eco-bazzar</name>
-	<description>Demo project for Spring Boot</description>
+	<name>Eco Bazzar App</name>
+	<description>Eco Friendly e-commerce app</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -56,12 +56,32 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-
-<groupId>org.springframework.boot</groupId>
-
-<artifactId>spring-boot-starter-validation</artifactId>
-
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-validation</artifactId>
 </dependency>
+
+<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+
+
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-validation</artifactId>
+</dependency>
+
+
+
+
+
+
 	</dependencies>
 
 	<build>
