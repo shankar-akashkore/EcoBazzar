@@ -1,5 +1,6 @@
 package com.ecobazzar.eco.bazzar.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,7 +24,8 @@ public class Product {
 	
 	private Double carbonImpact;
 	
-	private Boolean ecoCertified;
+	@Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean ecoCertified = false;
 	
 	private Long sellerId;
 	

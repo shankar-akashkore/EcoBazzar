@@ -17,6 +17,7 @@ public class ProductService {
 	}
 	
 	public Product createProduct(Product product) {
+		product.setEcoCertified(false);
 		return productRepository.save(product);
 	}
 	
@@ -31,7 +32,6 @@ public class ProductService {
 					product.setDetails(updateProduct.getDetails());
 					product.setPrice(updateProduct.getPrice());
 					product.setCarbonImpact(updateProduct.getCarbonImpact());
-					product.setEcoCertified(updateProduct.getEcoCertified());
 					product.setSellerId(updateProduct.getSellerId());
 					return productRepository.save(product);
 				})
