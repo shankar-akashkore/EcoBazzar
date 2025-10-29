@@ -32,37 +32,6 @@ public class Product {
 	private String imageURL;
 	
 	public Product() {}
-
-//	public Product(Long id, String name, String details, Double price, Double carbonImpact, boolean ecoCertified,
-//			Long sellerId) {
-//		super();
-//		this.id = id;
-//		this.name = name;
-//		this.details = details;
-//		this.price = price;
-//		this.carbonImpact = carbonImpact;
-//		this.ecoCertified = ecoCertified;
-//		this.sellerId = sellerId;
-//	}
-	
-	
-
-	
-
-	public Product(Long id, String name, String details, Double price, Double carbonImpact, Boolean ecoCertified,
-		Long sellerId, String imageURL) {
-	super();
-	this.id = id;
-	this.name = name;
-	this.details = details;
-	this.price = price;
-	this.carbonImpact = carbonImpact;
-	this.ecoCertified = ecoCertified;
-	this.sellerId = sellerId;
-	this.imageURL = imageURL;
-	}
-	
-	
 		
 	public Long getId() {
 		return id;
@@ -119,14 +88,16 @@ public class Product {
 	public void setSellerId(Long sellerId) {
 		this.sellerId = sellerId;
 	}
-	
-	public String getImageUrl() {
-		return imageUrl;
+
+	public String getImageURL() {
+		return imageURL;
 	}
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
 	}
+	
+	
 	
 	
 }
