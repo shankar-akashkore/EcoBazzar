@@ -12,12 +12,16 @@ public class UserRespone {
 	
 	private Integer ecoScore;
 	
-	public UserRespone(Long id, String name, String email, String role, Integer ecoScore) {
+	private String token;
+
+	public UserRespone(Long id, String name, String email, String role, Integer ecoScore, String token) {
+		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.role = role;
 		this.ecoScore = ecoScore;
+		this.token = token;
 	}
 
 	public Long getId() {
@@ -59,5 +63,15 @@ public class UserRespone {
 	public void setEcoScore(Integer ecoScore) {
 		this.ecoScore = ecoScore;
 	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+	
+	
 	
 }

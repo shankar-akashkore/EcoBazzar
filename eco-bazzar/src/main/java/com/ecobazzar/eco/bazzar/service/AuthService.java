@@ -2,21 +2,30 @@ package com.ecobazzar.eco.bazzar.service;
 
 import java.util.Optional;
 
-import com.ecobazzar.eco.bazzar.model.User; 
+import com.ecobazzar.eco.bazzar.model.User;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ecobazzar.eco.bazzar.dto.LoginRequest;
 import com.ecobazzar.eco.bazzar.dto.RegisterRequest;
 import com.ecobazzar.eco.bazzar.dto.UserRespone;
 import com.ecobazzar.eco.bazzar.repository.UserRepository;
+import com.ecobazzar.eco.bazzar.util.JwtUtil;
 
 @Service
 public class AuthService {
 
 	private final UserRepository userRepository;
 	
-	public AuthService(UserRepository userRepository) {
+	private final PasswordEncoder passwordEncoder;
+	
+	private JwtUtil jwtUtil;
+	
+	public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
 		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.jwtUtil = jwtUtil;
 	}
 	
 	public UserRespone register(RegisterRequest request) {
@@ -24,26 +33,35 @@ public class AuthService {
 		if(existing.isPresent()) {
 			throw new RuntimeException("Email is already taken");
 		}
+		
+		String role = request.getRole() == null ? "ROLE_USER" : "ROLE_" + request.getRole().toUpperCase();
+		
+		 if (role.equals("ROLE_ADMIN")) {
+	            throw new RuntimeException("Cannot self-register as admin!");
+	     }
+
 		User user = new User();
 		user.setName(request.getName());
 		user.setEmail(request.getEmail());
-		user.setPassword(request.getPassword());
-		user.setRole("CUSTOMER");
+		user.setPassword(passwordEncoder.encode(request.getPassword()));
+		user.setRole(role);
 		user.setEcoScore(0);
 		
-		userRepository.save(user);
+		User saved = userRepository.save(user);
 		
-		return new UserRespone(user.getId(), user.getName(), user.getEmail(), user.getRole(), user.getEcoScore());
+		return new UserRespone(saved.getId(), saved.getName(), saved.getEmail(), saved.getRole(), 0, null);
 	}
 	
 	public UserRespone login(LoginRequest login) {
 		User user = userRepository.findByEmail(login.getEmail())
 				.orElseThrow(() -> new RuntimeException("User not found"));
 		
-		if(!user.getPassword().equals(login.getPassword())) {
-			throw new RuntimeException("Invalid Password");
-		}
-		
-		return new UserRespone(user.getId(), user.getName(), user.getEmail(), user.getRole(), user.getEcoScore());
-	}
+		 if (!passwordEncoder.matches(login.getPassword(), user.getPassword())) {
+	            throw new RuntimeException("Invalid credentials!");
+	     }
+		 
+		 String token = jwtUtil.generateToken(user.getEmail(), user.getRole(), user.getId());
+		 
+		 return new UserRespone(user.getId(), user.getName(), user.getEmail(), user.getRole(), user.getEcoScore(), token);
+    }
 }
