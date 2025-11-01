@@ -3,6 +3,7 @@ package com.ecobazzar.eco.bazzar.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,7 +15,7 @@ import com.ecobazzar.eco.bazzar.model.User;
 import com.ecobazzar.eco.bazzar.service.AdminService;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("api/admin")
 public class AdminController {
 
 	
@@ -24,29 +25,33 @@ public class AdminController {
 		this.adminService = adminService;
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/approveProduct/{id}")
 	public Product approveProduct(@PathVariable Long id) {
 		return adminService.approveProduct(id);
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/approveSeller/{id}")
 	public User approveSeller(@PathVariable Long id) {
 		return adminService.approveSeller(id);
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/users")
 	public List<User> getAllUsers(){
 		return adminService.getAllUsers();
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/reports")
 	public Map<String, Object> getReports(){
 		return adminService.getAdminReport();
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/reports/download")
-		public String downloadReport() {
-			return adminService.generateReportCVS();
-		}
-	
+	public String downloadReport() {
+		return adminService.generateReportCVS();
+	}
 }
