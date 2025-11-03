@@ -10,13 +10,13 @@ import com.ecobazzar.eco.bazzar.repository.UserRepository;
 
 @Configuration
 public class DataLoader {
-
+	
 	@Bean
 	CommandLineRunner loadData(UserRepository userRepository, PasswordEncoder encoder) {
 		return args->{
 			if(userRepository.findByEmail("admin@ecobazzar.com").isEmpty()) {
 				User admin = new User();
-				admin.setName("Admin");
+				admin.setName("Role_Admin");
 				admin.setEmail("admin@ecobazzar.com");
 				admin.setPassword(encoder.encode("Admin@123"));
 				admin.setRole("ROLE_ADMIN");
@@ -24,10 +24,10 @@ public class DataLoader {
 				userRepository.save(admin);
 				
 				System.out.println("Admin Created Successfully: admin@ecobazzar.com/Admin@123");
-			} else {
+				} else {
 				System.out.println("Admin user already exists");
 			}
 		};
-	}
+	} 
 }
  

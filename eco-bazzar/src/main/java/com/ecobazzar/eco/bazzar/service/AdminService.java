@@ -17,33 +17,33 @@ import com.ecobazzar.eco.bazzar.repository.UserRepository;
 public class AdminService {
 
 	private final ProductRepository productRepository;
-	
 	private final UserRepository userRepository;
-	
 	private final OrderRepository orderRepository;
 	
 	public AdminService(ProductRepository productRepository, UserRepository userRepository, OrderRepository orderRepository) {
+		this.orderRepository = orderRepository;
 		this.productRepository = productRepository;
 		this.userRepository = userRepository;
-		this.orderRepository = orderRepository;
 	}
 	
 	public Product approveProduct(Long id) {
 		Product product = productRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Product not found"));
+				.orElseThrow(()-> new RuntimeException("Product not found"));
 		
 		product.setEcoCertified(true);
 		return productRepository.save(product);
 	}
 	
 	public User approveSeller(Long id) {
-		User user = userRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("User not found"));
-		
-		user.setRole("SELLER");
-		return userRepository.save(user);
+	    User user = userRepository.findById(id)
+	            .orElseThrow(() -> new RuntimeException("User not found"));
+
+	   
+	    user.setRole("ROLE_SELLER");
+	    return userRepository.save(user);
 	}
-	
+
+
 	public List<User> getAllUsers(){
 		return userRepository.findAll();
 	}
@@ -54,7 +54,7 @@ public class AdminService {
 		double totalCarbon = orders.stream().mapToDouble(Order::getTotalCarbon).sum();
 		double totalRevenue = orders.stream().mapToDouble(Order::getTotalPrice).sum();
 		
-		Map<String, Object> report = new HashMap<>();
+		Map<String, Object>report = new HashMap<>();
 		report.put("totalOrders", orders.size());
 		report.put("totalRevenue", totalRevenue);
 		report.put("totalCarbonSaved", totalCarbon);
@@ -62,22 +62,20 @@ public class AdminService {
 		report.put("totalProducts", productRepository.count());
 		
 		return report;
-		
 	}
 	
-	public String generateReportCVS() {
+	public String generateReportCSV() {
 		List<Order> order = orderRepository.findAll();
 		
-		StringBuilder csv = new StringBuilder("OrderId, UserId, ToatalPrice, Totalcarbon\n");
+		StringBuilder csv = new StringBuilder("OrderId, UserId, TotalPrice, TotalCarbon\n");
 		
-		for(Order o: order) {
+		for(Order o:order) {
 			csv.append(o.getId()).append(",")
 			.append(o.getUserId()).append(",")
 			.append(o.getTotalPrice()).append(",")
 			.append(o.getTotalCarbon()).append("\n");
-			
-		}
-		return csv.toString();
 	}
+		return csv.toString();
+}
 	
 }

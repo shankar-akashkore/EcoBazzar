@@ -15,43 +15,43 @@ import com.ecobazzar.eco.bazzar.model.User;
 import com.ecobazzar.eco.bazzar.service.AdminService;
 
 @RestController
-@RequestMapping("api/admin")
+@RequestMapping("/api/admin")
 public class AdminController {
 
 	
 	private final AdminService adminService;
-	
-	public AdminController(AdminService adminService) {
-		this.adminService = adminService;
-	}
-	
-	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/approveProduct/{id}")
-	public Product approveProduct(@PathVariable Long id) {
-		return adminService.approveProduct(id);
-	}
-	
-	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/approveSeller/{id}")
-	public User approveSeller(@PathVariable Long id) {
-		return adminService.approveSeller(id);
-	}
-	
-	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("/users")
-	public List<User> getAllUsers(){
-		return adminService.getAllUsers();
-	}
-	
-	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("/reports")
-	public Map<String, Object> getReports(){
-		return adminService.getAdminReport();
-	}
-	
-	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("/reports/download")
-	public String downloadReport() {
-		return adminService.generateReportCVS();
-	}
+
+    public AdminController(AdminService adminService) {
+        this.adminService = adminService;
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PutMapping("/approveProduct/{id}")
+    public Product approveProduct(@PathVariable Long id) {
+        return adminService.approveProduct(id);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PutMapping("/approveSeller/{id}")
+    public User approveSeller(@PathVariable Long id) {
+        return adminService.approveSeller(id);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/users")
+    public List<User> getAllUsers() {
+        return adminService.getAllUsers();
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/reports")
+    public Map<String, Object> getReports() {
+        return adminService.getAdminReport();
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/reports/download")
+    public String downloadReport() {
+        return adminService.generateReportCSV();
+    }
 }

@@ -13,7 +13,7 @@ import com.ecobazzar.eco.bazzar.service.AuthService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("api/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
 	private final AuthService authService;
@@ -23,9 +23,13 @@ public class AuthController {
 	}
 	
 	@PostMapping("/register")
-	public ResponseEntity<UserRespone> register (@Valid @RequestBody RegisterRequest register) {
-		return ResponseEntity.ok(authService.register(register));
-	}
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
+        try {
+            return ResponseEntity.ok(authService.register(request));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 	
 	@PostMapping("/login")
 	public ResponseEntity<UserRespone> login(@Valid @RequestBody LoginRequest login) {
