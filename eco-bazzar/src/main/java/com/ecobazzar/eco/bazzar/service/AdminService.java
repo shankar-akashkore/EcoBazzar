@@ -17,7 +17,9 @@ import com.ecobazzar.eco.bazzar.repository.UserRepository;
 public class AdminService {
 
 	private final ProductRepository productRepository;
+	
 	private final UserRepository userRepository;
+	
 	private final OrderRepository orderRepository;
 	
 	public AdminService(ProductRepository productRepository, UserRepository userRepository, OrderRepository orderRepository) {
@@ -76,6 +78,5 @@ public class AdminService {
 			.append(o.getTotalCarbon()).append("\n");
 	}
 		return csv.toString();
-}
-	
+	}
 }

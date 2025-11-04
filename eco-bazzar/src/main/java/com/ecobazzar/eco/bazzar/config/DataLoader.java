@@ -16,7 +16,7 @@ public class DataLoader {
 		return args->{
 			if(userRepository.findByEmail("admin@ecobazzar.com").isEmpty()) {
 				User admin = new User();
-				admin.setName("Role_Admin");
+				admin.setName("Default_Admin");
 				admin.setEmail("admin@ecobazzar.com");
 				admin.setPassword(encoder.encode("Admin@123"));
 				admin.setRole("ROLE_ADMIN");

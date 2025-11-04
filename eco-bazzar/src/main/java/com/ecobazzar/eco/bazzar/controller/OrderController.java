@@ -21,32 +21,32 @@ import com.ecobazzar.eco.bazzar.service.OrderService;
 public class OrderController {
 
 	
-    private final OrderService orderService;
-    
+	private final OrderService orderService;
+	
     private final UserRepository userRepository;
-	
-	public OrderController(OrderService orderService, UserRepository userRepository) {
-		this.orderService = orderService;
-		this.userRepository = userRepository;
-	}
-	
-	@PreAuthorize("hasRole('USER')")
-	@PostMapping("/checkout")
-	public Order checkout() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String email = auth.getName();
-		User currentUser = userRepository.findByEmail(email)
-				.orElseThrow(() -> new RuntimeException("User not found"));
-		return orderService.checkout(currentUser.getId());
-	}
-	
-	@PreAuthorize("hasRole('USER')")
-	@GetMapping
-	public List<Order> getUserOrder(){
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String email = auth.getName();
-		User currentUser = userRepository.findByEmail(email)
-				.orElseThrow(() -> new RuntimeException("User not found"));
-		return orderService.getOrdersByUserId(currentUser.getId());
-	}
+
+    public OrderController(OrderService orderService, UserRepository userRepository) {
+        this.orderService = orderService;
+        this.userRepository = userRepository;
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/checkout")
+    public Order checkout() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        User currentUser = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+        return orderService.checkout(currentUser.getId());
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping
+    public List<Order> getUserOrders() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        User currentUser = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+        return orderService.getOrdersByUserId(currentUser.getId());
+    }
 }
