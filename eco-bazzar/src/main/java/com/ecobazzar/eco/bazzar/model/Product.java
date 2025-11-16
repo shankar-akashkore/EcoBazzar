@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "products")
 
-
+//postcheck
 public class Product {
 
 	@Id
