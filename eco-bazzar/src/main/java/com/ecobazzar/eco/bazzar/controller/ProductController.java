@@ -23,51 +23,53 @@ import com.ecobazzar.eco.bazzar.service.ProductService;
 @RequestMapping("api/products")
 public class ProductController {
 
-	public final ProductService productService;
-	
-	private final UserRepository userRepository;
-	
-	public ProductController(ProductService productService, UserRepository userRepository) {
-		this.productService = productService;
-		this.userRepository = userRepository;
-	}
-	
-	@PreAuthorize("hasAnyRole('SELLER' , 'ADMIN')")
-	@PostMapping
-	public Product addProduct(@RequestBody Product product) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String email = auth.getName();
-		User seller = userRepository.findByEmail(email)
-				.orElseThrow(() -> new RuntimeException("Seller not found"));
-		product.setSellerId(seller.getId());
-		return productService.createProduct(product);
-	}
-	
-	@GetMapping
-	public List<Product> listAllProduct(){
-		return productService.getAllProducts();
-	}
-	
-	@PreAuthorize("hasAnyRole('SELLER' , 'ADMIN')")
-	@PutMapping("/{id}")
-	public Product updateProductDetails(@PathVariable Long id, @RequestBody Product product) {
-		return productService.updateProductDetails(id, product);
-	}
-	
-	@PreAuthorize("hasAnyRole('SELLER' , 'ADMIN')")
-	@DeleteMapping("/{id}")
-	public void deleteProductDetails(@PathVariable Long id) {
-		productService.deleteProductDetails(id);
-	}
-	
-	@GetMapping("/eco")
-	public List<Product> getEcoCertified(){
-		return productService.getEcoCertifiedProducts();
-	}
-	
-	@GetMapping("/eco/sorted")
-	public List<Product> getEcoCertifiedSorted(){
-		return productService.getEcoCertifiedSortedByCarbonImpact();
-	}
-	
+
+    private final ProductService productService;
+    private final UserRepository userRepository;
+
+    public ProductController(ProductService productService, UserRepository userRepository) {
+        this.productService = productService;
+        this.userRepository = userRepository;
+    }
+
+    @PreAuthorize("hasAnyRole('SELLER','ADMIN')")
+    @PostMapping
+    public Product addProduct(@RequestBody Product product) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        User seller = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Seller not found"));
+        product.setSellerId(seller.getId());
+        return productService.createProduct(product);
+    }
+
+    @GetMapping
+    public List<Product> listAllProducts() {
+        return productService.getAllProducts();
+    }
+
+    @PreAuthorize("hasAnyRole('SELLER','ADMIN')")
+    @GetMapping("/seller")
+    public List<Product> listSellerProducts() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        User seller = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Seller not found"));
+        return productService.getProductsBySellerId(seller.getId());
+    }
+
+    @GetMapping("/{id}")
+    public Product getProductById(@PathVariable Long id) {
+        return productService.getProductById(id);
+    }
+
+    @PreAuthorize("hasAnyRole('SELLER','ADMIN')")
+    @PutMapping("/{id}")
+    public Product updateProductDetails(@PathVariable Long id, @RequestBody Product product) {
+        return productService.updateProductDetails(id, product);
+    }
+
+    @PreAuthorize("hasAnyRole('SELLER','ADMIN')")
+    @DeleteMapping("/{id}")
+    public void deleteProductDetails(@PathVariable Long id) {
+        productService.deleteProductDetails(id);
+    }
 }

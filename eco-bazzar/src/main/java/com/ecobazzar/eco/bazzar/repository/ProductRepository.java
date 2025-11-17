@@ -8,9 +8,15 @@ import com.ecobazzar.eco.bazzar.model.Product;
 
 public interface ProductRepository extends JpaRepository<Product , Long> {
 
-	List<Product> findByEcoCertifiedTrue();
-	List<Product> findByEcoCertifiedTrueOrderByCarbonImpactAsc();
-	
-	Optional<Product> findFirstByEcoCertifiedTrueAndNameContainingIgnoreCase(String namePart);
+    List<Product> findByEcoCertifiedTrue();
+
+    List<Product> findByEcoCertifiedTrueOrderByCarbonImpactAsc();
+
+    Optional<Product> findFirstByEcoCertifiedTrueAndNameContainingIgnoreCase(String namePart);
+
+    List<Product> findByEcoRequestedTrue();
+
+    List<Product> findBySellerId(Long sellerId);
+
 }
 
