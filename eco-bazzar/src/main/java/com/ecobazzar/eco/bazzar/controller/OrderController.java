@@ -17,12 +17,11 @@ import com.ecobazzar.eco.bazzar.repository.UserRepository;
 import com.ecobazzar.eco.bazzar.service.OrderService;
 
 @RestController
-@RequestMapping("api/orders")
+@RequestMapping("/api/orders")
 public class OrderController {
 
-	
-	private final OrderService orderService;
-	
+    private final OrderService orderService;
+
     private final UserRepository userRepository;
 
     public OrderController(OrderService orderService, UserRepository userRepository) {
@@ -36,7 +35,7 @@ public class OrderController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         User currentUser = userRepository.findByEmail(email)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         return orderService.checkout(currentUser.getId());
     }
 
@@ -46,7 +45,7 @@ public class OrderController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         User currentUser = userRepository.findByEmail(email)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         return orderService.getOrdersByUserId(currentUser.getId());
     }
 }

@@ -15,27 +15,28 @@ import com.ecobazzar.eco.bazzar.repository.UserRepository;
 import com.ecobazzar.eco.bazzar.service.UserReportService;
 
 @RestController
-@RequestMapping("api/reports")
-
+@RequestMapping("/api/reports")
 public class UserReportController {
 
-	
-	private final UserReportService userReportService;
-	
-	private final UserRepository userRepository;
-	
-	public UserReportController(UserReportService userReportService, UserRepository userRepository) {
-		this.userReportService = userReportService;
-		this.userRepository = userRepository;
-	}
-	
-	@PreAuthorize("harRole('USER')")
-	@GetMapping("/user")
-	public UserReport getUserReport() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String email = auth.getName();
-		User currentUser = userRepository.findByEmail(email)
-				.orElseThrow(() -> new RuntimeException("Seller not found"));
-		return userReportService.getUserReport(currentUser.getId());
-	}
+    private final UserReportService userReportService;
+
+    private final UserRepository userRepository;
+
+    public UserReportController(UserReportService userReportService, UserRepository userRepository) {
+        this.userReportService = userReportService;
+        this.userRepository = userRepository;
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user")
+    public UserReport getUserReport() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        User currentUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Call the report service using the authenticated user's ID
+        return userReportService.getUserReport(currentUser.getId());
+    }
 }

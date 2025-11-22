@@ -2,80 +2,53 @@ package com.ecobazzar.eco.bazzar.dto;
 
 public class UserReport {
 
-	private Long userId;
-	
-	private String userName;
-	
-	private Long totalPurchses;
-	
-	private Double totalSpent;
-	
-	private Double totalCarbonSaved;
-	
-	private String ecoBadge;
-	
-	public UserReport() {
-		
-	}
+    private Long userId;
 
-	public UserReport(Long userId, String userName, Long totalPurchses, Double totalSpent, Double totalCarbonSaved,
-			String ecoBadge) {
-		super();
-		this.userId = userId;
-		this.userName = userName;
-		this.totalPurchses = totalPurchses;
-		this.totalSpent = totalSpent;
-		this.totalCarbonSaved = totalCarbonSaved;
-		this.ecoBadge = ecoBadge;
-	}
+    private String userName;
 
-	public Long getUserId() {
-		return userId;
-	}
+    private Long totalPurchase;
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+    private double totalSpent;
 
-	public String getUserName() {
-		return userName;
-	}
+    private double totalCarbonUsed;
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    private double totalCarbonSaved;
 
-	public Long getTotalPurchses() {
-		return totalPurchses;
-	}
+    private String ecoBadge;
 
-	public void setTotalPurchses(Long totalPurchses) {
-		this.totalPurchses = totalPurchses;
-	}
+    public UserReport() {}
 
-	public Double getTotalSpent() {
-		return totalSpent;
-	}
+    public UserReport(Long userId, String userName, Long totalPurchase,
+                      double totalSpent, double totalCarbonUsed,
+                      double totalCarbonSaved, String ecoBadge) {
 
-	public void setTotalSpent(Double totalSpent) {
-		this.totalSpent = totalSpent;
-	}
+        this.userId = userId;
+        this.userName = userName;
+        this.totalPurchase = totalPurchase;
+        this.totalSpent = totalSpent;
+        this.totalCarbonUsed = totalCarbonUsed;
+        this.totalCarbonSaved = totalCarbonSaved;
+        this.ecoBadge = ecoBadge;
+    }
 
-	public Double getTotalCarbonSaved() {
-		return totalCarbonSaved;
-	}
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
 
-	public void setTotalCarbonSaved(Double totalCarbonSaved) {
-		this.totalCarbonSaved = totalCarbonSaved;
-	}
+    public String getUserName() { return userName; }
+    public void setUserName(String userName) { this.userName = userName; }
 
-	public String getEcoBadge() {
-		return ecoBadge;
-	}
+    public Long getTotalPurchase() { return totalPurchase; }
+    public void setTotalPurchase(Long totalPurchase) { this.totalPurchase = totalPurchase; }
 
-	public void setEcoBadge(String ecoBadge) {
-		this.ecoBadge = ecoBadge;
-	}
-	
-	
+    public double getTotalSpent() { return totalSpent; }
+    public void setTotalSpent(double totalSpent) { this.totalSpent = totalSpent; }
+
+    public double getTotalCarbonUsed() { return totalCarbonUsed; }
+    public void setTotalCarbonUsed(double totalCarbonUsed) { this.totalCarbonUsed = totalCarbonUsed; }
+
+    public double getTotalCarbonSaved() { return totalCarbonSaved; }
+    public void setTotalCarbonSaved(double totalCarbonSaved) { this.totalCarbonSaved = totalCarbonSaved; }
+
+    public String getEcoBadge() { return ecoBadge; }
+    public void setEcoBadge(String ecoBadge) { this.ecoBadge = ecoBadge; }
 }

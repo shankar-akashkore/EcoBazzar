@@ -20,9 +20,8 @@ import com.ecobazzar.eco.bazzar.repository.UserRepository;
 import com.ecobazzar.eco.bazzar.service.ProductService;
 
 @RestController
-@RequestMapping("api/products")
+@RequestMapping("/api/products")
 public class ProductController {
-
 
     private final ProductService productService;
     private final UserRepository userRepository;
@@ -37,8 +36,11 @@ public class ProductController {
     public Product addProduct(@RequestBody Product product) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
-        User seller = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Seller not found"));
-        product.setSellerId(seller.getId());
+        User seller = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Seller not found"));
+
+        product.setSeller(seller);
+
         return productService.createProduct(product);
     }
 
@@ -46,6 +48,7 @@ public class ProductController {
     public List<Product> listAllProducts() {
         return productService.getAllProducts();
     }
+
 
     @PreAuthorize("hasAnyRole('SELLER','ADMIN')")
     @GetMapping("/seller")
@@ -63,8 +66,28 @@ public class ProductController {
 
     @PreAuthorize("hasAnyRole('SELLER','ADMIN')")
     @PutMapping("/{id}")
-    public Product updateProductDetails(@PathVariable Long id, @RequestBody Product product) {
-        return productService.updateProductDetails(id, product);
+    public Product updateProductDetails(@PathVariable Long id, @RequestBody Product incoming, Authentication auth) {
+        String email = auth.getName();
+        User current = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Product existing = productService.getProductById(id);
+
+        boolean isAdmin = current.getRole() != null && current.getRole().toUpperCase().contains("ADMIN");
+        if (!isAdmin) {
+            if (existing.getSeller() == null || existing.getSeller().getId() != current.getId()) {
+                throw new org.springframework.security.access.AccessDeniedException("You are not the owner of this product");
+            }
+        }
+
+        existing.setName(incoming.getName());
+        existing.setDetails(incoming.getDetails());
+        existing.setPrice(incoming.getPrice());
+        existing.setCarbonImpact(incoming.getCarbonImpact());
+        existing.setImageUrl(incoming.getImageUrl());
+        existing.setEcoRequested(incoming.getEcoRequested() == null ? existing.isEcoRequested() : incoming.getEcoRequested());
+
+        return productService.saveProduct(existing);
     }
 
     @PreAuthorize("hasAnyRole('SELLER','ADMIN')")

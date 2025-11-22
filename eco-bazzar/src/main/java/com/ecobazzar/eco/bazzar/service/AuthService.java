@@ -1,7 +1,5 @@
 package com.ecobazzar.eco.bazzar.service;
 
-import java.util.Optional;
-
 import com.ecobazzar.eco.bazzar.model.User;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.ecobazzar.eco.bazzar.dto.LoginRequest;
 import com.ecobazzar.eco.bazzar.dto.RegisterRequest;
-import com.ecobazzar.eco.bazzar.dto.UserRespone;
 import com.ecobazzar.eco.bazzar.repository.UserRepository;
 import com.ecobazzar.eco.bazzar.util.JwtUtil;
 

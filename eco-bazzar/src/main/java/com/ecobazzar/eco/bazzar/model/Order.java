@@ -1,7 +1,7 @@
 package com.ecobazzar.eco.bazzar.model;
 
 import java.time.LocalDate;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,69 +12,59 @@ import jakarta.persistence.Table;
 @Table(name = "orders")
 public class Order {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	private Long userId;
-	
-	private LocalDate orderDate;
-	
-	private double totalPrice;
-	
-	private double totalCarbon;
-	
-	public Order() {}
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
-	public Order(Long id, Long userId, LocalDate orderDate, double totalPrice, double totalCarbon) {
-		super();
-		this.id = id;
-		this.userId = userId;
-		this.orderDate = orderDate;
-		this.totalPrice = totalPrice;
-		this.totalCarbon = totalCarbon;
-	}
+    @Column(name = "order_date")
+    private LocalDate orderDate;
 
-	public Long getId() {
-		return id;
-	}
+    @Column(name = "carbon_used")
+    private double carbonUsed;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @Column(name = "carbon_saved")
+    private double carbonSaved;
 
-	public Long getUserId() {
-		return userId;
-	}
+    @Column(name = "total_carbon", nullable = false)
+    private double totalCarbon;
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+    @Column(name = "total_price")
+    private double totalPrice;
 
-	public LocalDate getOrderDate() {
-		return orderDate;
-	}
+    public Order() {}
 
-	public void setOrderDate(LocalDate orderDate) {
-		this.orderDate = orderDate;
-	}
+    public Order(Long id, Long userId, LocalDate orderDate,
+                 double carbonUsed, double carbonSaved, double totalCarbon, double totalPrice) {
+        this.id = id;
+        this.userId = userId;
+        this.orderDate = orderDate;
+        this.carbonUsed = carbonUsed;
+        this.carbonSaved = carbonSaved;
+        this.totalCarbon = totalCarbon;
+        this.totalPrice = totalPrice;
+    }
 
-	public double getTotalPrice() {
-		return totalPrice;
-	}
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-	public void setTotalPrice(double totalPrice) {
-		this.totalPrice = totalPrice;
-	}
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
 
-	public double getTotalCarbon() {
-		return totalCarbon;
-	}
+    public LocalDate getOrderDate() { return orderDate; }
+    public void setOrderDate(LocalDate orderDate) { this.orderDate = orderDate; }
 
-	public void setTotalCarbon(double totalCarbon) {
-		this.totalCarbon = totalCarbon;
-	}
+    public double getCarbonUsed() { return carbonUsed; }
+    public void setCarbonUsed(double carbonUsed) { this.carbonUsed = carbonUsed; }
 
-	
-	
+    public double getCarbonSaved() { return carbonSaved; }
+    public void setCarbonSaved(double carbonSaved) { this.carbonSaved = carbonSaved; }
+
+    public double getTotalCarbon() { return totalCarbon; }
+    public void setTotalCarbon(double totalCarbon) { this.totalCarbon = totalCarbon; }
+
+    public double getTotalPrice() { return totalPrice; }
+    public void setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; }
 }

@@ -23,8 +23,7 @@ import com.ecobazzar.eco.bazzar.service.CartService;
 @RequestMapping("/api/cart")
 public class CartController {
 
-	private final CartService cartService;
-	
+    private final CartService cartService;
     private final UserRepository userRepository;
 
     public CartController(CartService cartService, UserRepository userRepository) {
@@ -38,7 +37,7 @@ public class CartController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         User currentUser = userRepository.findByEmail(email)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         cartItem.setUserId(currentUser.getId());
         return cartService.addToCart(cartItem);
     }
@@ -49,7 +48,7 @@ public class CartController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         User currentUser = userRepository.findByEmail(email)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         return cartService.getCartSummary(currentUser.getId());
     }
 
