@@ -6,18 +6,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
+import com.ecobazzar.eco.bazzar.service.AdminRequestService;
+import com.ecobazzar.eco.bazzar.dto.PendingAdminRequestDto;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
-
 @RestController
-@RequestMapping("/api/admin")
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+@RequestMapping("/api/admin-request")
 public class AdminRequestController {
 
     private final AdminRequestService service;
+
     private final UserRepository userRepository;
 
     public AdminRequestController(AdminRequestService service, UserRepository userRepository) {

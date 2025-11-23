@@ -2,7 +2,8 @@ package com.ecobazzar.eco.bazzar.controller;
 
 import java.util.List;
 import java.util.Map;
-
+import com.ecobazzar.eco.bazzar.dto.PendingProductDto;
+import com.ecobazzar.eco.bazzar.dto.PendingSellerDto;
 import com.ecobazzar.eco.bazzar.repository.ProductRepository;
 import com.ecobazzar.eco.bazzar.repository.UserRepository;
 import org.springframework.http.HttpHeaders;
@@ -13,17 +14,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.ecobazzar.eco.bazzar.model.Product;
 import com.ecobazzar.eco.bazzar.model.User;
 import com.ecobazzar.eco.bazzar.service.AdminService;
 
 @RestController
-@RequestMapping("/api/admin-request")
+@RequestMapping("/api/admin")
+@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class AdminController {
 
     private final AdminService adminService;
+
     private final UserRepository userRepository;
+
     private final ProductRepository productRepository;
 
     public AdminController(AdminService adminService,

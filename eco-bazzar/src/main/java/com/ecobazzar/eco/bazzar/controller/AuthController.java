@@ -1,11 +1,11 @@
 package com.ecobazzar.eco.bazzar.controller;
 
+import com.ecobazzar.eco.bazzar.dto.UserResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.ecobazzar.eco.bazzar.dto.LoginRequest;
 import com.ecobazzar.eco.bazzar.dto.RegisterRequest;
 import com.ecobazzar.eco.bazzar.service.AuthService;
-
 import jakarta.validation.Valid;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -29,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserRespone> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<UserResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 }

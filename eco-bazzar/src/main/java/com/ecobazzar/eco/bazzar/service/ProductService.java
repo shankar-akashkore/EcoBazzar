@@ -1,9 +1,7 @@
 package com.ecobazzar.eco.bazzar.service;
 
 import java.util.List;
-
 import org.springframework.stereotype.Service;
-
 import com.ecobazzar.eco.bazzar.model.Product;
 import com.ecobazzar.eco.bazzar.repository.ProductRepository;
 
@@ -30,7 +28,7 @@ public class ProductService {
     public List<Product> getAllProducts() { return productRepository.findAll(); }
 
     public List<Product> getProductsBySellerId(Long sellerId) {
-        return productRepository.findBySellerId(sellerId);
+        return productRepository.findBySeller_Id(sellerId);  // FIXED
     }
 
     public List<Product> getEcoCertifiedProducts() {
@@ -57,5 +55,8 @@ public class ProductService {
 
     public void deleteProductDetails(Long id) {
         productRepository.deleteById(id);
+    }
+    public Product saveProduct(Product p) {
+        return productRepository.save(p);
     }
 }

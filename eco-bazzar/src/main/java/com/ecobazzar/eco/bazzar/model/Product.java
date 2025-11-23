@@ -2,7 +2,6 @@ package com.ecobazzar.eco.bazzar.model;
 
 import jakarta.persistence.*;
 
-
 @Entity
 @Table(name = "products")
 public class Product {
@@ -31,6 +30,8 @@ public class Product {
     @JoinColumn(name = "seller_id")
     private User seller;
 
+    // ==================== GETTERS & SETTERS ====================
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -49,12 +50,14 @@ public class Product {
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
+    // BOOLEAN GETTERS — THIS IS THE FIX!
     public boolean isEcoCertified() { return ecoCertified; }
     public void setEcoCertified(boolean ecoCertified) { this.ecoCertified = ecoCertified; }
 
     public boolean isEcoRequested() { return ecoRequested; }
     public void setEcoRequested(boolean ecoRequested) { this.ecoRequested = ecoRequested; }
 
+    // For backward compatibility with old code that used Boolean
     public Boolean getEcoCertified() { return ecoCertified; }
     public Boolean getEcoRequested() { return ecoRequested; }
 

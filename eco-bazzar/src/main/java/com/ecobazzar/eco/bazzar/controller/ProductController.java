@@ -1,7 +1,6 @@
 package com.ecobazzar.eco.bazzar.controller;
 
 import java.util.List;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.ecobazzar.eco.bazzar.model.Product;
 import com.ecobazzar.eco.bazzar.model.User;
 import com.ecobazzar.eco.bazzar.repository.UserRepository;
@@ -24,6 +22,7 @@ import com.ecobazzar.eco.bazzar.service.ProductService;
 public class ProductController {
 
     private final ProductService productService;
+
     private final UserRepository userRepository;
 
     public ProductController(ProductService productService, UserRepository userRepository) {
@@ -44,6 +43,8 @@ public class ProductController {
         return productService.createProduct(product);
     }
 
+
+    // public marketplace -> show ALL products (including non-certified)
     @GetMapping
     public List<Product> listAllProducts() {
         return productService.getAllProducts();
@@ -87,8 +88,9 @@ public class ProductController {
         existing.setImageUrl(incoming.getImageUrl());
         existing.setEcoRequested(incoming.getEcoRequested() == null ? existing.isEcoRequested() : incoming.getEcoRequested());
 
-        return productService.saveProduct(existing);
+        return productService.saveProduct(existing); // create a small save wrapper in service (see below)
     }
+
 
     @PreAuthorize("hasAnyRole('SELLER','ADMIN')")
     @DeleteMapping("/{id}")

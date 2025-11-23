@@ -9,12 +9,14 @@ import com.ecobazzar.eco.bazzar.model.Order;
 
 public interface OrderRepository extends JpaRepository<Order, Long>{
 
-	List<Order> findByUserId(Long userId);
-	
-	@Query("SELECT SUM(o.totalPrice)FROM Order o WHERE o.userId = :userId")
-	Double getTotalSpentByUser(Long usedId);
-	
-	@Query("SELECT SUM(o.totalCarbon)FROM Order o WHERE o.userId = :userId")
-	Double getTotalCarbonByUser(Long userId);
-	
+    List<Order> findByUserId(Long userId);
+
+    @Query("SELECT SUM(o.totalPrice) FROM Order o WHERE o.userId = :userId")
+    Double getTotalSpendByUser(Long userId);
+
+    @Query("SELECT SUM(o.carbonUsed) FROM Order o WHERE o.userId = :userId")
+    Double getTotalCarbonUsed(Long userId);
+
+    @Query("SELECT SUM(o.carbonSaved) FROM Order o WHERE o.userId = :userId")
+    Double getTotalCarbonSaved(Long userId);
 }

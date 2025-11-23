@@ -1,7 +1,6 @@
 package com.ecobazzar.eco.bazzar.controller;
 
 import java.util.List;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.ecobazzar.eco.bazzar.dto.CartSummaryDto;
 import com.ecobazzar.eco.bazzar.model.CartItem;
 import com.ecobazzar.eco.bazzar.model.User;
@@ -24,6 +22,7 @@ import com.ecobazzar.eco.bazzar.service.CartService;
 public class CartController {
 
     private final CartService cartService;
+
     private final UserRepository userRepository;
 
     public CartController(CartService cartService, UserRepository userRepository) {

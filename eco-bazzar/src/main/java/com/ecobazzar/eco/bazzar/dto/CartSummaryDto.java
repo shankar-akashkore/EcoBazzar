@@ -1,11 +1,9 @@
 package com.ecobazzar.eco.bazzar.dto;
 
 import java.util.List;
-
 import com.ecobazzar.eco.bazzar.model.CartItem;
 
 public class CartSummaryDto {
-
 
     private List<CartItem> items;
 

@@ -1,6 +1,5 @@
 package com.ecobazzar.eco.bazzar.controller;
 
-
 import com.ecobazzar.eco.bazzar.model.User;
 import com.ecobazzar.eco.bazzar.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
