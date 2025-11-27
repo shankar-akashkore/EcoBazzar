@@ -1,17 +1,11 @@
 package com.ecobazzar.eco.bazzar.controller;
 
 import java.util.List;
+import com.ecobazzar.eco.bazzar.repository.ProductRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ecobazzar.eco.bazzar.model.Product;
 import com.ecobazzar.eco.bazzar.model.User;
 import com.ecobazzar.eco.bazzar.repository.UserRepository;
@@ -21,13 +15,16 @@ import com.ecobazzar.eco.bazzar.service.ProductService;
 @RequestMapping("/api/products")
 public class ProductController {
 
+    private final ProductRepository productRepository;
+
     private final ProductService productService;
 
     private final UserRepository userRepository;
 
-    public ProductController(ProductService productService, UserRepository userRepository) {
+    public ProductController(ProductService productService, UserRepository userRepository, ProductRepository productRepository) {
         this.productService = productService;
         this.userRepository = userRepository;
+        this.productRepository = productRepository;
     }
 
     @PreAuthorize("hasAnyRole('SELLER','ADMIN')")
@@ -96,5 +93,29 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public void deleteProductDetails(@PathVariable Long id) {
         productService.deleteProductDetails(id);
+    }
+
+    @GetMapping("/ai/suggestions")
+    @PreAuthorize("hasRole('USER')")
+    public List<Product> getAiEcoSuggestions(@RequestParam("productId") Long productId) {
+        Product current = productService.getProductById(productId);
+
+        if (Boolean.TRUE.equals(current.getEcoCertified())) {
+            return List.of();
+        }
+
+        String searchTerm = extractKeyword(current.getName());
+
+        return productRepository.findByEcoCertifiedTrueAndNameContainingIgnoreCase(searchTerm)
+                .stream()
+                .filter(p -> !p.getId().equals(productId))
+                .limit(4)
+                .toList();
+    }
+
+    private String extractKeyword(String name) {
+        if (name == null || name.isBlank()) return "";
+        String[] words = name.toLowerCase().split("\\s+");
+        return words.length > 0 ? words[words.length - 1].replaceAll("[^a-z]", "") : "";
     }
 }

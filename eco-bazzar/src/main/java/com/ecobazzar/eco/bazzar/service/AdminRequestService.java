@@ -1,6 +1,5 @@
 package com.ecobazzar.eco.bazzar.service;
 
-
 import com.ecobazzar.eco.bazzar.model.AdminRequest;
 import com.ecobazzar.eco.bazzar.model.User;
 import com.ecobazzar.eco.bazzar.repository.AdminRequestRepository;
@@ -25,10 +24,6 @@ public class AdminRequestService {
     }
 
     public void requestAdminAccess(Long userId) {
-        if (adminRequestRepo.existsByUserIdAndApprovedFalseAndRejectedFalse(userId)) {
-            throw new RuntimeException("You already have a pending admin request");
-        }
-
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -36,8 +31,13 @@ public class AdminRequestService {
             throw new RuntimeException("You are already an admin");
         }
 
+        if (adminRequestRepo.existsByUserIdAndApprovedFalseAndRejectedFalse(userId)) {
+            throw new RuntimeException("You already have a pending admin request");
+        }
+
         AdminRequest request = new AdminRequest();
         request.setUser(user);
+        request.setRequestedAt(LocalDateTime.now());
         adminRequestRepo.save(request);
     }
 

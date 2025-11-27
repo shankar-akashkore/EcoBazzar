@@ -17,7 +17,6 @@ import java.util.List;
 public class AdminRequestController {
 
     private final AdminRequestService service;
-
     private final UserRepository userRepository;
 
     public AdminRequestController(AdminRequestService service, UserRepository userRepository) {
@@ -27,15 +26,23 @@ public class AdminRequestController {
 
     @PostMapping("/request")
     public ResponseEntity<Map<String, String>> requestAccess(Authentication auth) {
-        String email = auth.getName(); // JWT subject = email
+        String email = auth.getName();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        service.requestAdminAccess(user.getId());
-
         Map<String, String> response = new HashMap<>();
-        response.put("message", "Admin access requested successfully");
-        return ResponseEntity.ok(response);
+        try {
+            service.requestAdminAccess(user.getId());
+            response.put("message", "Admin access requested successfully");
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            String msg = e.getMessage();
+            if (msg.contains("already an admin") || msg.contains("pending admin request")) {
+                response.put("message", msg);
+                return ResponseEntity.status(409).body(response);
+            }
+            throw e;
+        }
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -56,18 +63,18 @@ public class AdminRequestController {
     @PostMapping("/approve/{id}")
     public ResponseEntity<Map<String, String>> approve(@PathVariable Long id) {
         service.approveRequest(id);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "User promoted to Admin successfully");
-        return ResponseEntity.ok(response);
+        Map<String, String> res = new HashMap<>();
+        res.put("message", "User promoted to Admin successfully");
+        return ResponseEntity.ok(res);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/reject/{id}")
     public ResponseEntity<Map<String, String>> reject(@PathVariable Long id) {
         service.rejectRequest(id);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Admin request rejected");
-        return ResponseEntity.ok(response);
+        Map<String, String> res = new HashMap<>();
+        res.put("message", "Admin request rejected");
+        return ResponseEntity.ok(res);
     }
 
     @GetMapping("/has-pending")

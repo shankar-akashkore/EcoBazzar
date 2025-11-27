@@ -15,16 +15,19 @@ public class CartSummaryDto {
 
     private String ecoSuggestion;
 
+    private EcoSwapSuggestion swapSuggestion;
+
     public CartSummaryDto() {}
 
     public CartSummaryDto(List<CartItem> items, double totalPrice,
                           double totalCarbonUsed, double totalCarbonSaved,
-                          String ecoSuggestion) {
+                          String ecoSuggestion, EcoSwapSuggestion swapSuggestion) {
         this.items = items;
         this.totalPrice = totalPrice;
         this.totalCarbonUsed = totalCarbonUsed;
         this.totalCarbonSaved = totalCarbonSaved;
         this.ecoSuggestion = ecoSuggestion;
+        this.swapSuggestion = swapSuggestion;
     }
 
     public List<CartItem> getItems() { return items; }
@@ -42,4 +45,44 @@ public class CartSummaryDto {
     public String getEcoSuggestion() { return ecoSuggestion; }
     public void setEcoSuggestion(String ecoSuggestion) { this.ecoSuggestion = ecoSuggestion; }
 
+    public EcoSwapSuggestion getSwapSuggestion() { return swapSuggestion; }
+    public void setSwapSuggestion(EcoSwapSuggestion swapSuggestion) { this.swapSuggestion = swapSuggestion; }
+
+    public static class EcoSwapSuggestion {
+        private Long cartItemIdToReplace;
+        private Long suggestedProductId;
+        private String suggestedProductName;
+        private Double carbonSavingsPerUnit;
+        private Integer quantity;
+
+        public EcoSwapSuggestion() {}
+        public EcoSwapSuggestion(Long cartItemIdToReplace, Long suggestedProductId,
+                                 String suggestedProductName, Double carbonSavingsPerUnit, Integer quantity) {
+            this.cartItemIdToReplace = cartItemIdToReplace;
+            this.suggestedProductId = suggestedProductId;
+            this.suggestedProductName = suggestedProductName;
+            this.carbonSavingsPerUnit = carbonSavingsPerUnit;
+            this.quantity = quantity;
+        }
+
+        public Long getCartItemIdToReplace() { return cartItemIdToReplace; }
+        public void setCartItemIdToReplace(Long cartItemIdToReplace) { this.cartItemIdToReplace = cartItemIdToReplace; }
+
+        public Long getSuggestedProductId() { return suggestedProductId; }
+        public void setSuggestedProductId(Long suggestedProductId) { this.suggestedProductId = suggestedProductId; }
+
+        public String getSuggestedProductName() { return suggestedProductName; }
+        public void setSuggestedProductName(String suggestedProductName) { this.suggestedProductName = suggestedProductName; }
+
+        public Double getCarbonSavingsPerUnit() { return carbonSavingsPerUnit; }
+        public void setCarbonSavingsPerUnit(Double carbonSavingsPerUnit) { this.carbonSavingsPerUnit = carbonSavingsPerUnit; }
+
+        public Integer getQuantity() { return quantity; }
+        public void setQuantity(Integer quantity) { this.quantity = quantity; }
+
+        public Double getTotalSavings() {
+            return carbonSavingsPerUnit != null && quantity != null
+                    ? carbonSavingsPerUnit * quantity : 0.0;
+        }
+    }
 }

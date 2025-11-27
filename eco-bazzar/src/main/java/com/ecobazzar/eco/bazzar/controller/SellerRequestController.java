@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/seller-request")
@@ -22,21 +24,26 @@ public class SellerRequestController {
 
     @PostMapping("/request")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<String> requestSellerRole(Authentication auth) {
+    public ResponseEntity<Map<String, String>> requestSellerRole(Authentication auth) {
         User user = userRepository.findByEmail(auth.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        Map<String, String> response = new HashMap<>();
+
         if ("ROLE_SELLER".equals(user.getRole())) {
-            return ResponseEntity.badRequest().body("You are already a seller");
+            response.put("message", "You are already a seller");
+            return ResponseEntity.badRequest().body(response);
         }
         if (user.isSellerRequestPending()) {
-            return ResponseEntity.badRequest().body("Request already pending");
+            response.put("message", "Request already pending");
+            return ResponseEntity.badRequest().body(response);
         }
 
         user.setSellerRequestPending(true);
         userRepository.save(user);
 
-        return ResponseEntity.ok("Seller request sent successfully");
+        response.put("message", "Seller request sent successfully");
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/has-pending")

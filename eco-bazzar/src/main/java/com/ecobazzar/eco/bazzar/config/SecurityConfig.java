@@ -1,8 +1,10 @@
 package com.ecobazzar.eco.bazzar.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
@@ -16,10 +18,10 @@ import com.ecobazzar.eco.bazzar.security.JwtFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
 import java.util.List;
 
 @Configuration
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
@@ -35,26 +37,37 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
+
+                        .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/products", "/api/products/**").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/api/products/seller").hasAnyAuthority("ROLE_SELLER", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/products/**").hasAnyAuthority("ROLE_SELLER", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/products/**").hasAnyAuthority("ROLE_SELLER", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasAnyAuthority("ROLE_SELLER", "ROLE_ADMIN")
+                        .requestMatchers("/api/reports/user/**").hasRole("USER")
 
-                        .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/admin-request/pending").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/admin-request/approve/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/admin-request/reject/**").hasAuthority("ROLE_ADMIN")
-
-                        .requestMatchers(HttpMethod.GET, "/api/products", "/api/products/*").permitAll()
-
-                        .requestMatchers("/api/cart/**", "/api/checkout/**", "/api/orders/**").authenticated()
                         .requestMatchers("/api/admin-request/request").authenticated()
                         .requestMatchers("/api/admin-request/has-pending").authenticated()
 
+                        .requestMatchers("/api/products/seller").hasAnyRole("SELLER", "ADMIN")
+                        .requestMatchers("/api/products/**").hasAnyRole("SELLER", "ADMIN")
+
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/admin-request/pending",
+                                "/api/admin-request/approve/**",
+                                "/api/admin-request/reject/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated()
+                )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((req, res, authException) -> {
+                            res.setContentType("application/json");
+                            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            res.getWriter().write("{\"error\":\"Unauthorized\",\"message\":\"Valid token required\"}");
+                        })
+                        .accessDeniedHandler((req, res, accessDeniedException) -> {
+                            res.setContentType("application/json");
+                            res.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            res.getWriter().write("{\"error\":\"Forbidden\",\"message\":\"Insufficient permissions\"}");
+                        })
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -69,7 +82,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("http://localhost:4200"));
+        config.setAllowedOriginPatterns(List.of("*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
