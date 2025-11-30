@@ -14,6 +14,7 @@ import com.ecobazzar.eco.bazzar.repository.ProductRepository;
 public class CartService {
 
     private final CartRepository cartRepository;
+
     private final ProductRepository productRepository;
 
     public CartService(CartRepository cartRepository, ProductRepository productRepository) {
@@ -30,15 +31,41 @@ public class CartService {
 
         double totalPrice = 0.0;
         double totalCarbonUsed = 0.0;
+        double totalCarbonSaved = 0.0;
 
         CartSummaryDto.EcoSwapSuggestion swapSuggestion = generateSwapSuggestion(items);
         String ecoMessage = null;
 
         for (CartItem item : items) {
-            Product p = productRepository.findById(item.getProductId()).orElse(null);
-            if (p != null) {
-                totalPrice += p.getPrice() * item.getQuantity();
-                totalCarbonUsed += (p.getCarbonImpact() != null ? p.getCarbonImpact() : 0.0) * item.getQuantity();
+            Product current = productRepository.findById(item.getProductId()).orElse(null);
+            if (current == null) continue;
+
+            int qty = item.getQuantity();
+            double currentImpact = current.getCarbonImpact() != null ? current.getCarbonImpact() : 0.0;
+
+            totalPrice += (current.getPrice() != null ? current.getPrice() : 0.0) * qty;
+            totalCarbonUsed += currentImpact * qty;
+
+            String keyword = extractKeyword(current.getName());
+            List<Product> allProducts = productRepository.findAll();
+
+            double maxSimilarImpact = currentImpact;
+            for (Product other : allProducts) {
+                if (other.getId().equals(current.getId())) continue;
+                if (other.getCarbonImpact() == null) continue;
+
+                String name = other.getName() != null ? other.getName().toLowerCase() : "";
+                if (name.contains(keyword)) {
+                    // find a higher-carbon version of same-type product
+                    if (other.getCarbonImpact() > maxSimilarImpact) {
+                        maxSimilarImpact = other.getCarbonImpact();
+                    }
+                }
+            }
+
+            if (maxSimilarImpact > currentImpact) {
+                double savedPerUnit = maxSimilarImpact - currentImpact;
+                totalCarbonSaved += savedPerUnit * qty;
             }
         }
 
@@ -52,7 +79,7 @@ public class CartService {
                 items,
                 totalPrice,
                 totalCarbonUsed,
-                0.0,
+                totalCarbonSaved,
                 ecoMessage,
                 swapSuggestion
         );
@@ -125,7 +152,10 @@ public class CartService {
 
     private String extractKeyword(String name) {
         if (name == null || name.isBlank()) return "";
-        String[] words = name.toLowerCase().split("\\s+");
-        return words.length > 0 ? words[words.length - 1].replaceAll("[^a-z]", "") : "";
+        name = name.toLowerCase();
+        name = name.replaceAll("\\b(eco|friendly|organic|natural|bio|premium|certified|green|kg|g|pack|litre|l|ml)\\b", "");
+        name = name.replaceAll("[^a-z\\s]", " ").replaceAll("\\s+", " ").trim();
+        String[] words = name.split("\\s+");
+        return words.length > 0 ? words[words.length - 1] : name;
     }
 }

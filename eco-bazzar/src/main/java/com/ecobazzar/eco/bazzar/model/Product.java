@@ -11,13 +11,9 @@ public class Product {
     private Long id;
 
     private String name;
-
     private String details;
-
     private Double price;
-
     private Double carbonImpact;
-
     private String imageUrl;
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
@@ -30,7 +26,6 @@ public class Product {
     @JoinColumn(name = "seller_id")
     private User seller;
 
-    // ==================== GETTERS & SETTERS ====================
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
